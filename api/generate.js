@@ -68,12 +68,14 @@ function assembleProto(fields) {
 }
 
 function readVarint(buf, off) {
-  let r = 0, s = 0;
+  // no bitwise ops — akumulasi multiply, aman sampai 2^53
+  let r = 0, mul = 1;
   while (true) {
     const b = buf[off++];
-    r |= (b & 0x7F) << s;
+    r += (b & 0x7F) * mul;
     if (!(b & 0x80)) break;
-    s += 7;
+    mul *= 128;
+    if (mul > Number.MAX_SAFE_INTEGER) throw new Error('varint overflow');
   }
   return [r, off];
 }
@@ -332,6 +334,15 @@ module.exports = async function handler(req, res) {
     result.jwt = jwt;
     result.session_key = session_key;
     result.session_iv = session_iv;
+
+    try {
+      const payload_b64 = jwt.split('.')[1].replace(/-/g,'+').replace(/_/g,'/');
+      const payload = JSON.parse(Buffer.from(payload_b64, 'base64').toString('utf-8'));
+      if (Number(payload.account_id) !== Number(result.account_id)) {
+        result.account_id_jwt = Number(payload.account_id);
+        result.account_id = Number(payload.account_id);
+      }
+    } catch (e) { result.jwt_parse_error = e.message; }
 
     result.password = password;  // note: raw upper-hex, same as python output
     result.ok = true;
