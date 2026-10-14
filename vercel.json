@@ -1,5 +1,5 @@
 {
-  "regions": ["hnd1"],
+  "regions": ["icn1"],
   "functions": {
     "api/generate.js": { "maxDuration": 30 }
   }
