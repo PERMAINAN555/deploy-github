@@ -1,0 +1,21 @@
+{
+  "timestamp": "2026-10-14T16:50:27.457890",
+  "json_file": "/storage/emulated/0/Download/RESULT GENERATOR/CANTIK/MENARIK/menarik_20261014_164648.json",
+  "total": 1,
+  "success": 0,
+  "partial": 0,
+  "failed": 1,
+  "total_time": 0.3,
+  "avg_time": 0.3,
+  "pb2_used": false,
+  "results": [
+    {
+      "uid": "8250545795",
+      "name": "Account-8250545795",
+      "region": "ID",
+      "status": "failed",
+      "message": "Failed to get access token",
+      "data": {}
+    }
+  ]
+}
