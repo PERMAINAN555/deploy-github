@@ -1,5 +1,8 @@
 {
+  "regions": ["sin1"],
   "functions": {
-    "api/register.js": { "maxDuration": 10 }
+    "api/generate.js": {
+      "maxDuration": 30
+    }
   }
 }
