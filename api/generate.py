@@ -261,14 +261,23 @@ def step6(session, at, oid, region, platform="4"):
     raise RuntimeError("s6 no JWT")
 
 # ============ MAIN ============
-def generate_account(region="ID"):
+def generate_account(region="ID", custom_nick=None):
     session = requests.Session()
     session.verify = False
     password = hashlib.sha256(os.urandom(32)).hexdigest().upper()
 
     uid = step1(session, password)
     at, oid = step2(session, uid, password)
-    nickname = step3(session, oid)
+
+    # pakai custom kalau dikasih, kalau nggak generate dari server
+    if custom_nick:
+        # random suffix biar unik
+        import random as _r
+        suffix = ''.join(_r.choices('0123456789ABCDEF', k=4))
+        nickname = f"{custom_nick}{suffix}"
+    else:
+        nickname = step3(session, oid)
+
     aid = step4(session, nickname, at, oid, region)
     try: step5(session, aid)
     except: pass
@@ -291,10 +300,17 @@ class handler(BaseHTTPRequestHandler):
             region = p.get("region", ["ID"])[0].upper()
         except: pass
 
+        nick = None
+        try:
+            q = urllib.parse.urlparse(self.path).query
+            p = urllib.parse.parse_qs(q)
+            nick = p.get("nick", [None])[0]
+        except: pass
+
         result = {"region": region, "ok": False}
         try:
             t0 = time.time()
-            acc = generate_account(region)
+            acc = generate_account(region, custom_nick=nick)
             result.update(acc)
             result["ok"] = True
             result["elapsed_ms"] = int((time.time() - t0) * 1000)
