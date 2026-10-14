@@ -1,5 +1,5 @@
 {
-  "regions": ["bom1"],
+  "regions": ["syd1"],
   "functions": {
     "api/generate.js": { "maxDuration": 30 }
   }
