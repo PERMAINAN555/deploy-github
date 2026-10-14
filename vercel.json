@@ -1,6 +1,8 @@
 {
-  "regions": ["syd1"],
+  "regions": ["sin1"],
   "functions": {
-    "api/generate.js": { "maxDuration": 30 }
+    "api/generate.py": {
+      "maxDuration": 30
+    }
   }
 }
